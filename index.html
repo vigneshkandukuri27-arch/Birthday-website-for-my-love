@@ -1300,6 +1300,8 @@ function launchCelebration(){
     setTimeout(()=>{btn.style.transform='';btn.style.boxShadow='';},300);
     doButtonRings(btn);
   }
+  
+  // Start all the visual effects
   doScreenFlash();
   doGlitter();
   doStarTwinkles();
@@ -1308,10 +1310,18 @@ function launchCelebration(){
   setTimeout(doFireworks,    300);
   setTimeout(doEmojiShower,  400);
   setTimeout(doToast,        600);
-  setTimeout(doGlitter,     1200);
-  setTimeout(doStarTwinkles,1500);
-  setTimeout(()=>{doScreenFlash();doConfettiRain();},2500);
+
+  // SHOW THE BOX IN THE MIDDLE
+  setTimeout(() => {
+    document.getElementById('birthdayModal').style.display = 'flex';
+  }, 1000); 
 }
+
+// Function to close the box
+function closeBirthdayBox() {
+  document.getElementById('birthdayModal').style.display = 'none';
+}
+
 </script>
 </body>
 </html>
