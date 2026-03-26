@@ -940,31 +940,377 @@ function restartQuiz(){
 }
 renderQ();
 
-// ── CONFETTI
-function launchCelebration(){
-  const colors=['#D94F6B','#C9963A','#fff','#F07A92','#E8B860','#FDEEF2','#FFD700','#FFB6C1'];
-  const shapes=['circle','rect','pill'];
-  for(let i=0;i<120;i++){
-    setTimeout(()=>{
-      const el=document.createElement('div');
-      const size=Math.random()*9+5;
-      const shape=shapes[Math.floor(Math.random()*shapes.length)];
-      const br=shape==='circle'?'50%':shape==='pill'?'100px':'3px';
-      const w=shape==='pill'?size*2:size;
-      Object.assign(el.style,{
-        position:'fixed',left:Math.random()*100+'vw',top:'-20px',
-        width:w+'px',height:size+'px',
-        background:colors[Math.floor(Math.random()*colors.length)],
-        borderRadius:br,opacity:'1',zIndex:'9999',
-        transform:`rotate(${Math.random()*360}deg)`,
-        pointerEvents:'none',
-        transition:`top ${1.8+Math.random()*1.5}s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.5s ${1.8+Math.random()*1}s`
+// ══════════════════════════════════════════════════
+// ── MEGA CELEBRATION ENGINE ──
+// ══════════════════════════════════════════════════
+
+(function injectCelebrationStyles() {
+  const s = document.createElement('style');
+  s.textContent = `
+    @keyframes confettiFall {
+      0%   { transform: translateY(-30px) translateX(0px) rotate(var(--sa,0deg)) scale(1); opacity:1; }
+      75%  { opacity: 1; }
+      100% { transform: translateY(108vh) translateX(var(--drift,0px)) rotate(calc(var(--sa,0deg) + 720deg)) scale(0.7); opacity:0; }
+    }
+    @keyframes cannonFly {
+      0%   { transform: translate(0,0) rotate(var(--sa,0deg)) scale(1); opacity:1; }
+      80%  { opacity:1; }
+      100% { transform: translate(var(--cx,200px), var(--cy,300px)) rotate(calc(var(--sa,0deg)+540deg)) scale(0.5); opacity:0; }
+    }
+    @keyframes emojiFloat {
+      0%   { transform: translateY(0) scale(0) rotate(0deg); opacity:0; }
+      15%  { opacity:1; transform: translateY(-20px) scale(1.3) rotate(var(--er,10deg)); }
+      85%  { opacity:1; }
+      100% { transform: translateY(var(--ey,-280px)) scale(0.8) rotate(var(--er2,25deg)); opacity:0; }
+    }
+    @keyframes glitterPop {
+      0%   { transform: translate(0,0) scale(0); opacity:1; }
+      50%  { transform: translate(var(--gx,0px), var(--gy,0px)) scale(1.4); opacity:1; }
+      100% { transform: translate(calc(var(--gx,0px)*1.8), calc(var(--gy,0px)*1.8)) scale(0); opacity:0; }
+    }
+    @keyframes screenFlash {
+      0%,100%{ opacity:0; }
+      10%    { opacity:0.22; }
+      40%    { opacity:0.08; }
+    }
+    @keyframes btnRing {
+      0%   { transform:scale(1);   opacity:0.9; }
+      100% { transform:scale(3.5); opacity:0; }
+    }
+    @keyframes toastIn {
+      0%   { transform:translateY(120px) scale(0.8); opacity:0; }
+      60%  { transform:translateY(-10px) scale(1.04); opacity:1; }
+      100% { transform:translateY(0) scale(1); opacity:1; }
+    }
+    @keyframes toastOut {
+      0%   { transform:translateY(0) scale(1); opacity:1; }
+      100% { transform:translateY(120px) scale(0.8); opacity:0; }
+    }
+    @keyframes starTwinkle {
+      0%,100%{ transform:scale(0) rotate(0deg);    opacity:0; }
+      30%    { transform:scale(1.5) rotate(120deg); opacity:1; }
+      70%    { transform:scale(0.8) rotate(240deg); opacity:0.7; }
+    }
+    .celeb-piece    { position:fixed; pointer-events:none; z-index:9998; will-change:transform,opacity; }
+    .celeb-firework { position:fixed; pointer-events:none; z-index:9997; }
+    .celeb-toast    {
+      position:fixed; bottom:2rem; left:50%; transform:translateX(-50%);
+      z-index:10000; pointer-events:none;
+      background:linear-gradient(135deg,#D94F6B,#C9963A);
+      color:#fff; border-radius:100px;
+      padding:0.85rem 2.2rem;
+      font-family:'Great Vibes',cursive;
+      font-size:1.6rem; white-space:nowrap;
+      box-shadow:0 8px 40px rgba(217,79,107,0.7), 0 0 60px rgba(201,150,58,0.4);
+    }
+  `;
+  document.head.appendChild(s);
+})();
+
+function rnd(min, max) { return Math.random() * (max - min) + min; }
+function pick(arr)     { return arr[Math.floor(Math.random() * arr.length)]; }
+function spawnPiece(props, animName, duration, delay) {
+  const el = document.createElement('div');
+  el.className = 'celeb-piece';
+  Object.assign(el.style, props);
+  el.style.animation = `${animName} ${duration}s ${delay}s cubic-bezier(0.25,0.46,0.45,0.94) both`;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), (duration + delay + 0.5) * 1000);
+  return el;
+}
+
+const COLORS = [
+  '#D94F6B','#F07A92','#FF6B9D','#FF3366',
+  '#C9963A','#E8B860','#FFD700','#FFC200',
+  '#ffffff','#FDEEF2','#FFB6C1','#FFAAD2',
+  '#B5EADA','#A8EDEA','#7DF9FF','#FF77FF'
+];
+
+function doScreenFlash() {
+  const flash = document.createElement('div');
+  Object.assign(flash.style, {
+    position:'fixed', inset:'0', zIndex:'9999',
+    background:'radial-gradient(ellipse at 50% 50%, rgba(217,79,107,0.5), rgba(201,150,58,0.25), transparent)',
+    pointerEvents:'none',
+    animation:'screenFlash 0.7s ease-out forwards'
+  });
+  document.body.appendChild(flash);
+  setTimeout(() => flash.remove(), 800);
+}
+
+function doButtonRings(btn) {
+  for (let i = 0; i < 4; i++) {
+    const ring = document.createElement('div');
+    const rect = btn.getBoundingClientRect();
+    const cx   = rect.left + rect.width / 2;
+    const cy   = rect.top  + rect.height / 2;
+    Object.assign(ring.style, {
+      position:'fixed',
+      left: (cx - 30) + 'px', top: (cy - 18) + 'px',
+      width:'60px', height:'36px',
+      borderRadius:'100px',
+      border:'3px solid ' + pick(['#D94F6B','#C9963A','#fff','#FFD700']),
+      zIndex:'9999', pointerEvents:'none',
+      animation:`btnRing ${0.6 + i * 0.15}s ${i * 0.12}s ease-out forwards`
+    });
+    document.body.appendChild(ring);
+    setTimeout(() => ring.remove(), 1200);
+  }
+}
+
+function doConfettiRain() {
+  const shapes = ['circle','rect','pill','square'];
+  for (let i = 0; i < 300; i++) {
+    setTimeout(() => {
+      const shape = pick(shapes);
+      let w, h, br;
+      if      (shape === 'circle') { const s = rnd(5,13)+'px'; w=s; h=s; br='50%'; }
+      else if (shape === 'rect')   { w=rnd(8,16)+'px'; h=rnd(4,8)+'px';  br='2px'; }
+      else if (shape === 'pill')   { w=rnd(12,22)+'px'; h=rnd(3,6)+'px'; br='100px'; }
+      else                          { const s=rnd(5,11)+'px'; w=s; h=s; br='3px'; }
+
+      const left  = rnd(0, 100);
+      const drift = rnd(-180, 180);
+      const dur   = rnd(2.0, 5.5).toFixed(2);
+      const sa    = Math.floor(rnd(0,360));
+
+      spawnPiece({
+        left: left + 'vw', top: '-20px',
+        width: w, height: h, borderRadius: br,
+        background: pick(COLORS),
+        '--drift': drift + 'px',
+        '--sa': sa + 'deg',
+        boxShadow: Math.random() > 0.7 ? '0 0 6px ' + pick(COLORS) : 'none'
+      }, 'confettiFall', parseFloat(dur), 0);
+
+    }, i * 12);
+  }
+}
+
+function doFireworks() {
+  const cvs = document.createElement('canvas');
+  cvs.className = 'celeb-firework';
+  Object.assign(cvs.style, { inset:'0', width:'100vw', height:'100vh', zIndex:'9997' });
+  cvs.width  = window.innerWidth;
+  cvs.height = window.innerHeight;
+  document.body.appendChild(cvs);
+  const c = cvs.getContext('2d');
+
+  const FW_COLORS = ['#D94F6B','#FFD700','#F07A92','#C9963A','#ffffff','#FF77FF','#7DF9FF','#FF6B9D'];
+
+  class Particle {
+    constructor(x, y, color) {
+      this.x = x; this.y = y; this.color = color;
+      const angle = rnd(0, Math.PI * 2);
+      const speed = rnd(2, 9);
+      this.vx = Math.cos(angle) * speed;
+      this.vy = Math.sin(angle) * speed;
+      this.alpha = 1;
+      this.decay = rnd(0.012, 0.025);
+      this.size  = rnd(2, 5);
+      this.gravity = 0.12;
+    }
+    update() {
+      this.vx *= 0.97; this.vy *= 0.97;
+      this.vy += this.gravity;
+      this.x += this.vx; this.y += this.vy;
+      this.alpha -= this.decay;
+    }
+    draw() {
+      c.save();
+      c.globalAlpha = Math.max(0, this.alpha);
+      c.fillStyle = this.color;
+      c.shadowBlur = 8; c.shadowColor = this.color;
+      c.beginPath();
+      c.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      c.fill();
+      c.restore();
+    }
+  }
+
+  let particles = [];
+  let bursts = 0;
+  const maxBursts = 10;
+
+  function burst() {
+    if (bursts >= maxBursts) return;
+    bursts++;
+    const bx = rnd(cvs.width * 0.1, cvs.width * 0.9);
+    const by = rnd(cvs.height * 0.05, cvs.height * 0.55);
+    const col = pick(FW_COLORS);
+    for (let i = 0; i < 80; i++) particles.push(new Particle(bx, by, col));
+    for (let i = 0; i < 24; i++) {
+      const a = (i / 24) * Math.PI * 2;
+      const p = new Particle(bx, by, '#fff');
+      const sp = rnd(4, 7);
+      p.vx = Math.cos(a) * sp; p.vy = Math.sin(a) * sp;
+      p.size = 2; p.decay = 0.02;
+      particles.push(p);
+    }
+    if (bursts < maxBursts) setTimeout(burst, rnd(300, 600));
+  }
+
+  let fwRAF;
+  function fwLoop() {
+    c.fillStyle = 'rgba(8,4,10,0.18)';
+    c.fillRect(0, 0, cvs.width, cvs.height);
+    particles = particles.filter(p => p.alpha > 0);
+    particles.forEach(p => { p.update(); p.draw(); });
+    if (particles.length > 0 || bursts < maxBursts) {
+      fwRAF = requestAnimationFrame(fwLoop);
+    } else {
+      cancelAnimationFrame(fwRAF);
+      cvs.remove();
+    }
+  }
+
+  burst();
+  fwLoop();
+  setTimeout(() => { cancelAnimationFrame(fwRAF); cvs.remove(); }, 8000);
+}
+
+function doEmojiShower() {
+  const emojis = ['🌹','❤️','💕','✨','🎉','🥳','🎂','💖','🌸','🎊','💫','🔥','👑','💝','🍰','🦋'];
+  for (let i = 0; i < 55; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'celeb-piece';
+      el.textContent = pick(emojis);
+      const left  = rnd(2, 95);
+      const ey    = -rnd(200, 420);
+      const er    = rnd(-30, 30);
+      const er2   = rnd(-60, 60);
+      const dur   = rnd(2.2, 4.0).toFixed(2);
+      const size  = rnd(18, 38).toFixed(0);
+      Object.assign(el.style, {
+        left: left + 'vw',
+        bottom: '-50px',
+        fontSize: size + 'px',
+        lineHeight: '1',
+        '--ey': ey + 'px',
+        '--er': er + 'deg',
+        '--er2': er2 + 'deg',
+        animation: `emojiFloat ${dur}s 0s ease-out forwards`
       });
       document.body.appendChild(el);
-      requestAnimationFrame(()=>{el.style.top=(75+Math.random()*30)+'vh';el.style.opacity='0'});
-      setTimeout(()=>el.remove(),4000);
-    },i*25);
+      setTimeout(() => el.remove(), (parseFloat(dur) + 0.5) * 1000);
+    }, i * 60);
   }
+}
+
+function doGlitter() {
+  const gColors = ['#FFD700','#fff','#FF6B9D','#D94F6B','#C9963A','#E8B860','#FFAAFF'];
+  for (let i = 0; i < 120; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'celeb-piece';
+      const size = rnd(3, 9).toFixed(0);
+      const left = rnd(0, 100);
+      const top  = rnd(10, 90);
+      const gx   = rnd(-60, 60);
+      const gy   = rnd(-60, 60);
+      const dur  = rnd(0.6, 1.4).toFixed(2);
+      const col  = pick(gColors);
+      Object.assign(el.style, {
+        left: left + 'vw', top: top + 'vh',
+        width: size + 'px', height: size + 'px',
+        borderRadius: Math.random() > 0.5 ? '50%' : '2px',
+        background: col,
+        boxShadow: `0 0 ${rnd(4,12).toFixed(0)}px ${col}, 0 0 ${rnd(8,20).toFixed(0)}px ${col}`,
+        '--gx': gx + 'px', '--gy': gy + 'px',
+        animation: `glitterPop ${dur}s 0s ease-out forwards`
+      });
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), (parseFloat(dur) + 0.3) * 1000);
+    }, i * 25 + rnd(0, 400));
+  }
+}
+
+function doSideCannons() {
+  const sides = [
+    { left: '-10px', '--sa': '0deg',   cxBase: 1,  cyBase: -1 },
+    { left: '100vw', '--sa': '180deg', cxBase: -1, cyBase: -1 }
+  ];
+  sides.forEach(side => {
+    for (let i = 0; i < 50; i++) {
+      setTimeout(() => {
+        const shape = Math.random() > 0.5 ? 'pill' : 'rect';
+        const w = shape === 'pill' ? rnd(10,20)+'px' : rnd(7,14)+'px';
+        const h = shape === 'pill' ? rnd(4,6)+'px'   : rnd(4,8)+'px';
+        const br = shape === 'pill' ? '100px' : '2px';
+        const cx = side.cxBase * rnd(150, 380);
+        const cy = rnd(-80, -300);
+        const dur = rnd(1.4, 2.8).toFixed(2);
+        spawnPiece({
+          left: side.left, top: (50 + rnd(-20,20)) + 'vh',
+          width: w, height: h, borderRadius: br,
+          background: pick(COLORS),
+          '--sa': side['--sa'],
+          '--cx': cx + 'px', '--cy': cy + 'px'
+        }, 'cannonFly', parseFloat(dur), 0);
+      }, i * 30);
+    }
+  });
+}
+
+function doStarTwinkles() {
+  const starSVG = (col) =>
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="${col}">
+       <polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9"/>
+     </svg>`;
+  const starColors = ['#FFD700','#fff','#F07A92','#E8B860','#FFAAFF'];
+  for (let i = 0; i < 40; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'celeb-piece';
+      const s = rnd(10, 28).toFixed(0);
+      const col = pick(starColors);
+      el.innerHTML = starSVG(col);
+      const dur = rnd(0.8, 2.0).toFixed(2);
+      Object.assign(el.style, {
+        left: rnd(0,100) + 'vw',
+        top:  rnd(5,90)  + 'vh',
+        width: s+'px', height: s+'px',
+        filter: `drop-shadow(0 0 ${rnd(3,8).toFixed(0)}px ${col})`,
+        animation: `starTwinkle ${dur}s 0s ease-in-out forwards`
+      });
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), (parseFloat(dur) + 0.3) * 1000);
+    }, rnd(0, 1500));
+  }
+}
+
+function doToast() {
+  const toast = document.createElement('div');
+  toast.className = 'celeb-toast';
+  toast.textContent = '🌹 Happy Birthday, Heeral! 🌹';
+  toast.style.animation = 'toastIn 0.7s cubic-bezier(0.34,1.56,0.64,1) forwards';
+  document.body.appendChild(toast);
+  setTimeout(() => {
+    toast.style.animation = 'toastOut 0.5s ease-in forwards';
+    setTimeout(() => toast.remove(), 600);
+  }, 3800);
+}
+
+function launchCelebration() {
+  const btn = document.querySelector('.celebrate-btn');
+  if (btn) {
+    btn.style.transform = 'scale(0.92)';
+    btn.style.boxShadow = '0 0 60px rgba(217,79,107,0.95), 0 0 120px rgba(201,150,58,0.6)';
+    setTimeout(() => { btn.style.transform = ''; btn.style.boxShadow = ''; }, 300);
+    doButtonRings(btn);
+  }
+  doScreenFlash();
+  doGlitter();
+  doStarTwinkles();
+  setTimeout(doConfettiRain,  80);
+  setTimeout(doSideCannons,  150);
+  setTimeout(doFireworks,    300);
+  setTimeout(doEmojiShower,  400);
+  setTimeout(doToast,        600);
+  setTimeout(doGlitter,     1200);
+  setTimeout(doStarTwinkles,1500);
+  setTimeout(() => { doScreenFlash(); doConfettiRain(); }, 2500);
 }
 </script>
 </body>
