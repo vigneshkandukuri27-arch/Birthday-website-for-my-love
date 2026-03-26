@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Happy Birthday, Heeral 🌹</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Cinzel:wght@400;600&family=Great+Vibes&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --rose:#D94F6B;
+  --rose-light:#F07A92;
+  --rose-glow:rgba(217,79,107,0.25);
+  --gold:#C9963A;
+  --gold-light:#E8B860;
+  --deep:#08040A;
+  --deep2:#120910;
+  --deep3:#1C101A;
+  --surface:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.08);
+  --text:#fff;
+  --muted:rgba(255,255,255,0.5);
+  --dim:rgba(255,255,255,0.25);
+}
+html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:'Jost',sans-serif;
+  background:var(--deep);
+  color:var(--text);
+  overflow-x:hidden;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ══ CANVAS ══ */
+#bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ══ LAYOUT ══ */
+.page{position:relative;z-index:1;max-width:430px;margin:0 auto}
+
+/* ══ HERO ══ */
+.hero{
+  min-height:100svh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  padding:2rem 1.5rem 5rem;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 90% 70% at 50% 35%,rgba(217,79,107,0.15) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-eyebrow{
+  font-family:'Cinzel',serif;
+  font-size:0.6rem;letter-spacing:0.4em;
+  text-transform:uppercase;color:var(--gold);
+  margin-bottom:2rem;
+  opacity:0;animation:riseUp 1s 0.4s both;
+}
+.hero-name{
+  font-family:'Great Vibes',cursive;
+  font-size:clamp(4.5rem,22vw,7rem);
+  line-height:1;color:#fff;
+  text-shadow:0 0 60px rgba(217,79,107,0.7),0 0 120px rgba(217,79,107,0.3);
+  opacity:0;animation:riseUp 1s 0.65s both;
+}
+.hero-line{
+  width:80px;height:1px;
+  background:linear-gradient(to right,transparent,var(--rose),transparent);
+  margin:1.5rem auto;
+  opacity:0;animation:fadeIn 1s 0.9s both;
+}
+.hero-tagline{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-size:1.15rem;
+  color:rgba(255,255,255,0.65);
+  line-height:1.6;
+  opacity:0;animation:riseUp 1s 1s both;
+}
+.hero-date-badge{
+  margin-top:2rem;
+  display:inline-flex;align-items:center;gap:0.6rem;
+  background:rgba(201,150,58,0.1);
+  border:1px solid rgba(201,150,58,0.35);
+  padding:0.5rem 1.4rem;border-radius:100px;
+  font-family:'Cinzel',serif;
+  font-size:0.65rem;letter-spacing:0.2em;color:var(--gold-light);
+  opacity:0;animation:riseUp 1s 1.2s both;
+}
+.hero-from{
+  margin-top:0.8rem;
+  font-size:0.72rem;color:var(--dim);
+  letter-spacing:0.15em;text-transform:uppercase;
+  opacity:0;animation:fadeIn 1s 1.5s both;
+}
+.scroll-hint{
+  position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:0.4rem;
+  opacity:0;animation:fadeIn 1s 2s both;
+}
+.scroll-hint span{font-size:0.58rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--dim)}
+.scroll-bar{width:1px;height:44px;background:linear-gradient(to bottom,var(--rose),transparent);animation:pulse 2s ease-in-out infinite}
+
+/* ══ SECTIONS ══ */
+section{padding:4.5rem 1.5rem;border-top:1px solid var(--border)}
+.s-label{
+  font-family:'Cinzel',serif;
+  font-size:0.58rem;letter-spacing:0.35em;
+  text-transform:uppercase;color:var(--rose-light);
+  margin-bottom:0.9rem;
+}
+.s-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(1.9rem,8vw,2.6rem);
+  line-height:1.2;color:#fff;margin-bottom:0.5rem;
+  font-weight:300;
+}
+.s-title em{font-style:italic;color:var(--rose-light)}
+
+/* ══ LETTER ══ */
+.letter-wrap{
+  margin-top:1.8rem;
+  background:rgba(217,79,107,0.05);
+  border:1px solid rgba(217,79,107,0.2);
+  border-radius:20px;padding:2rem 1.4rem;
+  position:relative;overflow:hidden;
+}
+.letter-wrap::before{
+  content:'"';position:absolute;
+  top:-1.5rem;left:0.8rem;
+  font-family:'Cormorant Garamond',serif;
+  font-size:10rem;color:rgba(217,79,107,0.08);
+  line-height:1;pointer-events:none;
+}
+.letter-text{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.05rem;line-height:1.9;
+  color:rgba(255,255,255,0.82);font-style:italic;
+  position:relative;z-index:1;
+}
+.letter-text br+br{margin-top:0.5rem;display:block;content:''}
+.letter-sign{
+  margin-top:1.5rem;text-align:right;
+  font-family:'Great Vibes',cursive;
+  font-size:1.7rem;color:var(--rose-light);
+}
+
+/* ══ REASONS ══ */
+.reasons-list{margin-top:2rem;display:flex;flex-direction:column;gap:0.9rem}
+.reason{
+  display:flex;align-items:flex-start;gap:1rem;
+  padding:1.2rem 1.2rem;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;transition:border-color 0.3s;
+}
+.reason:active{transform:scale(0.98)}
+.r-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2rem;font-weight:600;
+  color:rgba(217,79,107,0.25);
+  min-width:2.2rem;line-height:1;flex-shrink:0;
+}
+.r-body h3{font-size:0.9rem;font-weight:500;color:#fff;margin-bottom:0.3rem}
+.r-body p{font-size:0.8rem;line-height:1.65;color:var(--muted)}
+
+/* ══ GALLERY ══ */
+.gallery-strip{
+  display:flex;gap:0.8rem;margin-top:1.8rem;
+  overflow-x:auto;padding-bottom:0.5rem;
+  scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.gallery-strip::-webkit-scrollbar{display:none}
+.photo-frame{
+  flex:0 0 72vw;max-width:290px;
+  aspect-ratio:3/4;border-radius:18px;
+  overflow:hidden;scroll-snap-align:start;
+  position:relative;
+  background:var(--deep3);border:1px solid var(--border);
+}
+.photo-frame img{width:100%;height:100%;object-fit:cover;display:block}
+.photo-ph{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:0.7rem;
+  color:var(--dim);
+}
+.photo-ph .ph-icon{font-size:2rem;opacity:0.35}
+.photo-ph .ph-text{font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;opacity:0.5}
+.photo-cap{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(to top,rgba(8,4,10,0.92),rgba(8,4,10,0.4) 60%,transparent);
+  padding:2.5rem 1rem 0.9rem;
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-size:0.82rem;
+  color:rgba(255,255,255,0.75);
+  line-height:1.5;
+}
+.like-tag{
+  display:inline-flex;align-items:center;gap:0.3rem;
+  background:rgba(217,79,107,0.25);
+  border:1px solid rgba(217,79,107,0.45);
+  border-radius:100px;
+  padding:0.22rem 0.7rem;
+  font-family:'Jost',sans-serif;
+  font-style:normal;font-size:0.68rem;
+  font-weight:500;letter-spacing:0.05em;
+  color:var(--rose-light);
+  margin-bottom:0.4rem;
+  width:fit-content;
+}
+
+/* ══ TIMELINE ══ */
+.timeline{
+  position:relative;margin-top:2rem;
+  padding-left:1.8rem;
+}
+.timeline::before{
+  content:'';position:absolute;
+  left:0.3rem;top:0.5rem;bottom:0.5rem;
+  width:1px;
+  background:linear-gradient(to bottom,var(--rose) 0%,rgba(217,79,107,0.08) 100%);
+}
+.t-item{position:relative;padding-bottom:2.2rem}
+.t-item:last-child{padding-bottom:0}
+.t-dot{
+  position:absolute;left:-1.55rem;top:0.3rem;
+  width:10px;height:10px;border-radius:50%;
+  background:var(--rose);
+  box-shadow:0 0 14px rgba(217,79,107,0.8);
+}
+.t-date{
+  font-family:'Cinzel',serif;
+  font-size:0.6rem;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--gold);
+  margin-bottom:0.35rem;
+}
+.t-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.1rem;font-weight:600;
+  color:#fff;margin-bottom:0.3rem;
+}
+.t-desc{font-size:0.82rem;line-height:1.7;color:var(--muted)}
+
+
+
+/* ══ LOVE NOTES JAR ══ */
+.jar-section{text-align:center}
+.jar-wrap{
+  margin-top:2rem;display:flex;
+  flex-direction:column;align-items:center;gap:1.5rem;
+}
+.jar-hint{font-size:0.78rem;color:var(--dim);letter-spacing:0.08em}
+.jar-svg-wrap{position:relative;cursor:pointer;width:120px;height:180px}
+.jar-svg-wrap:active{transform:scale(0.95)}
+.jar-shake{animation:jarShake 0.5s ease-in-out}
+@keyframes jarShake{
+  0%,100%{transform:rotate(0deg)}
+  20%{transform:rotate(-5deg)}
+  40%{transform:rotate(5deg)}
+  60%{transform:rotate(-4deg)}
+  80%{transform:rotate(3deg)}
+}
+.note-popup{
+  position:relative;
+  background:linear-gradient(145deg,#FDF8F0,#F5EDE0);
+  border-radius:12px;padding:1.5rem 1.4rem;
+  width:100%;max-width:300px;
+  text-align:center;
+  box-shadow:0 8px 40px rgba(0,0,0,0.4);
+  transform:scale(0);opacity:0;
+  transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+.note-popup.show{transform:scale(1);opacity:1}
+.note-popup p{
+  color:#2C1018;
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-size:1rem;line-height:1.7;
+}
+.note-popup .note-num{
+  font-size:0.65rem;color:rgba(44,16,24,0.4);
+  letter-spacing:0.2em;text-transform:uppercase;
+  margin-bottom:0.5rem;font-style:normal;
+  font-family:'Jost',sans-serif;
+}
+.tap-next{
+  font-size:0.72rem;color:var(--rose-light);
+  letter-spacing:0.1em;margin-top:0.5rem;cursor:pointer;
+}
+
+/* ══ MUSIC PLAYER ══ */
+.player-card{
+  margin-top:2rem;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:1.8rem 1.5rem;
+  display:flex;flex-direction:column;align-items:center;gap:1.2rem;
+}
+.player-disc{
+  width:110px;height:110px;border-radius:50%;
+  background:conic-gradient(from 0deg,#D94F6B,#C9963A,#D94F6B);
+  border:3px solid rgba(255,255,255,0.1);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+  animation:spin 8s linear infinite paused;
+}
+.player-disc.spinning{animation-play-state:running}
+.disc-hole{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--deep2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.7rem;color:var(--rose);
+}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.player-meta{text-align:center}
+.player-song{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.1rem;font-weight:600;color:#fff;
+}
+.player-artist{font-size:0.78rem;color:var(--muted);margin-top:0.2rem}
+.player-track{width:100%;height:3px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden}
+.player-fill{
+  height:100%;width:0%;
+  background:linear-gradient(to right,var(--rose),var(--gold));
+  border-radius:2px;transition:width 0.3s linear;
+}
+.player-time{
+  display:flex;justify-content:space-between;
+  width:100%;font-size:0.7rem;color:var(--dim);
+  margin-top:-0.7rem;
+}
+.player-btns{display:flex;align-items:center;gap:1.8rem}
+.p-btn{
+  background:none;border:none;
+  color:var(--muted);font-size:1.1rem;
+  cursor:pointer;padding:0.5rem;transition:color 0.2s;
+}
+.p-btn:active{transform:scale(0.88)}
+.p-play{
+  width:50px;height:50px;border-radius:50%;
+  background:var(--rose);border:none;
+  color:#fff;font-size:1.2rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 24px rgba(217,79,107,0.5);
+  transition:all 0.2s;
+}
+.p-play:active{transform:scale(0.9)}
+
+/* ══ QUIZ ══ */
+.quiz-wrap{margin-top:2rem}
+.quiz-progress{
+  display:flex;gap:4px;margin-bottom:1.5rem;
+}
+.qp-dot{
+  flex:1;height:3px;border-radius:2px;
+  background:rgba(255,255,255,0.12);
+  transition:background 0.4s;
+}
+.qp-dot.done{background:var(--rose)}
+.quiz-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:18px;padding:1.5rem 1.3rem;
+}
+.q-num{font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:0.6rem;font-family:'Cinzel',serif}
+.q-text{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.1rem;line-height:1.5;color:#fff;
+  margin-bottom:1.2rem;
+}
+.q-options{display:flex;flex-direction:column;gap:0.6rem}
+.q-opt{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:12px;padding:0.75rem 1rem;
+  font-size:0.85rem;color:rgba(255,255,255,0.75);
+  cursor:pointer;text-align:left;
+  transition:all 0.25s;
+}
+.q-opt:active{transform:scale(0.98)}
+.q-opt.correct{background:rgba(16,200,100,0.12);border-color:rgba(16,200,100,0.4);color:#6EE7A8}
+.q-opt.wrong{background:rgba(217,79,107,0.1);border-color:rgba(217,79,107,0.35);color:var(--rose-light)}
+.quiz-result{
+  text-align:center;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:18px;padding:2rem 1.5rem;
+}
+.result-score{
+  font-family:'Great Vibes',cursive;
+  font-size:3.5rem;color:var(--rose-light);
+  margin:0.5rem 0;
+}
+.result-msg{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-size:1rem;
+  color:var(--muted);line-height:1.7;
+  margin-top:0.8rem;
+}
+.quiz-restart{
+  margin-top:1.2rem;
+  background:var(--rose);color:#fff;
+  border:none;padding:0.7rem 2rem;
+  border-radius:100px;font-size:0.85rem;
+  font-family:'Jost',sans-serif;
+  cursor:pointer;
+  box-shadow:0 6px 20px rgba(217,79,107,0.4);
+}
+
+/* ══ WISH ══ */
+.wish-section{text-align:center;border-top:1px solid var(--border)}
+.wish-big{
+  font-family:'Great Vibes',cursive;
+  font-size:clamp(3rem,14vw,5rem);
+  line-height:1.25;color:#fff;
+  text-shadow:0 0 60px rgba(217,79,107,0.6);
+  margin:1.5rem 0;
+}
+.wish-big .accent{color:var(--rose-light)}
+.wish-sub{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;
+  color:var(--muted);font-size:0.95rem;line-height:1.75;
+}
+.celebrate-btn{
+  margin-top:2rem;
+  background:linear-gradient(135deg,var(--rose),#B03060);
+  color:#fff;border:none;
+  padding:0.9rem 2.5rem;border-radius:100px;
+  font-size:0.88rem;font-weight:500;
+  font-family:'Jost',sans-serif;
+  cursor:pointer;letter-spacing:0.06em;
+  box-shadow:0 8px 32px rgba(217,79,107,0.5);
+  transition:all 0.25s;
+}
+.celebrate-btn:active{transform:scale(0.95)}
+
+/* ══ FOOTER ══ */
+footer{
+  text-align:center;padding:3.5rem 1.5rem 5rem;
+  border-top:1px solid var(--border);position:relative;z-index:1;
+}
+.heart-anim{font-size:2.2rem;display:inline-block;animation:heartBeat 1.5s ease-in-out infinite}
+.footer-text{font-size:0.72rem;color:var(--dim);margin-top:0.8rem;letter-spacing:0.1em}
+.footer-sign{
+  font-family:'Great Vibes',cursive;
+  font-size:1.6rem;color:var(--rose-light);margin-top:0.5rem;
+}
+
+/* ══ ANIMATIONS ══ */
+@keyframes riseUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:1;transform:scaleY(1)}50%{opacity:0.3;transform:scaleY(0.5)}}
+@keyframes heartBeat{
+  0%,100%{transform:scale(1)}
+  14%{transform:scale(1.25)}
+  28%{transform:scale(1)}
+  42%{transform:scale(1.18)}
+  70%{transform:scale(1)}
+}
+
+.reveal{opacity:0;transform:translateY(26px);transition:opacity 0.75s ease,transform 0.75s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+.delay-1{transition-delay:0.1s}.delay-2{transition-delay:0.2s}.delay-3{transition-delay:0.3s}
+</style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+
+<div class="page">
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <p class="hero-eyebrow">✦ A Birthday Love Letter from Bhiwandi✦</p>
+  <h1 class="hero-name">Heeral</h1>
+  <div class="hero-line"></div>
+  <p class="hero-tagline">You are my favourite kind of beautiful —<br>the kind that reaches the soul.</p>
+  <div class="hero-date-badge">🌹 March 28, 2026</div>
+  <p class="hero-from">With all my love, Vignesh</p>
+  <div class="scroll-hint">
+    <div class="scroll-bar"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ══ LOVE LETTER ══ -->
+<section>
+  <p class="s-label reveal">A letter for you</p>
+  <h2 class="s-title reveal delay-1">Words from <em>my heart</em></h2>
+  <div class="letter-wrap reveal delay-2">
+    <p class="letter-text">
+      My dearest Heeral,<br><br>
+      Happy Birthday, my love. As I sit here thinking about you, my mind immediately goes back to where it all began — that first connection on Snapchat. It's funny how a simple digital spark could turn into the greatest fire of my life, but from the moment we started talking, I knew you were different. You have this incredible, rare gift — the way you always know exactly how to make me laugh, even on my darkest, most difficult days. Your joy is my anchor, and your smile is the only thing I ever need to see to feel like everything is going to be okay.<br><br>
+      Nothing compares to the memory of our first meet. It lives in my head like a favourite movie — the nerves, the anticipation, and finally seeing you standing there in front of me. That day is so incredibly special to me because it was the moment you stepped out of my phone and into my world, making everything feel real for the first time.<br><br>
+      Since then, every second with you has been a gift. I want you to know how deeply you are loved — not just today, but every single day. You are my heart, Heeral, and I am the luckiest man to be by your side.
+    </p>
+    <p class="letter-sign">Forever yours, Vignesh</p>
+  </div>
+</section>
+
+<!-- ══ REASONS ══ -->
+<section>
+  <p class="s-label reveal">Why I adore you</p>
+  <h2 class="s-title reveal delay-1"><em>7 Reasons</em> I Love You</h2>
+  <div class="reasons-list">
+
+    <div class="reason reveal">
+      <div class="r-num">01</div>
+      <div class="r-body">
+        <h3>The Best Kind of Different</h3>
+        <p>I love how you stand out from everyone else by just being yourself — no cringe reels or toxic trends, just pure, real energy. Finding a girl as genuine and grounded as you is the best thing that ever happened to me.</p>
+      </div>
+    </div>
+
+    <div class="reason reveal delay-1">
+      <div class="r-num">02</div>
+      <div class="r-body">
+        <h3>Your Foodie Heart</h3>
+        <p>Watching you get excited over Jalebi, Fafda, and Dhokla is one of my favourite sights. Your obsession with good food is almost as cute as your obsession with me, and I wouldn't have it any other way. 🤍</p>
+      </div>
+    </div>
+
+    <div class="reason reveal delay-2">
+      <div class="r-num">03</div>
+      <div class="r-body">
+        <h3>The "Mom" Level Care</h3>
+        <p>The way you look after me and even scold me when I need it reminds me so much of a mother's selfless love. It's that deep level of protection and care that makes me feel incredibly safe and lucky.</p>
+      </div>
+    </div>
+
+    <div class="reason reveal">
+      <div class="r-num">04</div>
+      <div class="r-body">
+        <h3>Unmatched Confidence & Grace</h3>
+        <p>The way you carry yourself with such natural confidence is something I know you're proud of, and it's one of the things I admire most. You walk through the world with a strength that is both beautiful and inspiring.</p>
+      </div>
+    </div>
+
+    <div class="reason reveal delay-1">
+      <div class="r-num">05</div>
+      <div class="r-body">
+        <h3>My Favourite Obsession</h3>
+        <p>There is nothing better than knowing how much you love and adore me every single day. Being the centre of your world feels like a superpower, and I promise to always cherish the way you choose me.</p>
+      </div>
+    </div>
+
+    <div class="reason reveal delay-2">
+      <div class="r-num">06</div>
+      <div class="r-body">
+        <h3>A Heart of Pure Gold</h3>
+        <p>You are the most caring and loving person I've ever met, and I am so grateful for the way you pour your heart into us. I've never been loved the way you love me, and it's a feeling I never want to lose.</p>
+      </div>
+    </div>
+
+    <div class="reason reveal">
+      <div class="r-num">07</div>
+      <div class="r-body">
+        <h3>Our Unique Connection</h3>
+        <p>From your funny quirks to your serious talks, everything about your behaviour is different from any other girl I've known. You are a rare find, Heeral, and every day is better because you're in it.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ GALLERY ══ -->
+<section>
+  <p class="s-label reveal">Your pictures I love</p>
+  <h2 class="s-title reveal delay-1">I Like <em>This Pic</em> 😍</h2>
+  <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.92rem;color:var(--muted);margin-bottom:0.5rem;" class="reveal delay-2">Every photo of you lives rent-free in my head, Heeral 🌹</p>
+  <div class="gallery-strip">
+
+    <div class="photo-frame">
+      <div class="photo-ph"><div class="ph-icon">🌸</div><div class="ph-text"><img src="https://res.cloudinary.com/dzkvuk2ha/image/upload/v1774115064/WhatsApp_Image_2026-03-21_at_9.37.20_PM_1_s6pbqt.jpg" alt=""></div></div>
+      <div class="photo-cap">
+        <div class="like-tag">❤️ I like this pic</div>
+        Bro the way you're smiling here — stop it 😭🔥
+      </div>
+    </div>
+
+    <div class="photo-frame">
+      <div class="photo-ph"><div class="ph-icon">✨</div><div class="ph-text"><img src="https://res.cloudinary.com/dzkvuk2ha/image/upload/v1774115063/WhatsApp_Image_2026-03-21_at_9.37.19_PM_nkvanb.jpg" alt=""></div></div>
+      <div class="photo-cap">
+        <div class="like-tag">🔥 Obsessed with this one</div>
+        This photo should be illegal, you look too good 😤💕
+      </div>
+    </div>
+
+    <div class="photo-frame">
+      <div class="photo-ph"><div class="ph-icon">💛</div><div class="ph-text"><img src="https://res.cloudinary.com/dzkvuk2ha/image/upload/v1774115063/WhatsApp_Image_2026-03-21_at_9.37.20_PM_ixbwda.jpg" alt=""></div></div>
+      <div class="photo-cap">
+        <div class="like-tag">😍 My fav pic of you</div>
+        I keep coming back to this one. Every. Single. Day. 🌹
+      </div>
+    </div>
+
+    <div class="photo-frame">
+      <div class="photo-ph"><div class="ph-icon">🌙</div><div class="ph-text"><img src="https://res.cloudinary.com/dzkvuk2ha/image/upload/v1774508474/WhatsApp_Image_2026-03-26_at_9.14.46_AM_vrtq9v.jpg" alt=""></div></div>
+      <div class="photo-cap">
+        <div class="like-tag">💖 Literally stunning</div>
+        You weren't even trying and still looked like this 😩✨
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ TIMELINE ══ -->
+<section>
+  <p class="s-label reveal">How we got here</p>
+  <h2 class="s-title reveal delay-1">Our <em>Story</em> So Far</h2>
+  <div class="timeline">
+    <div class="t-item reveal">
+      <div class="t-dot"></div>
+      <p class="t-date">February 2026</p>
+      <h3 class="t-title">The Snapchat Spark ⚡</h3>
+      <p class="t-desc">We connected on Snapchat, and from the very first message, something felt different. Conversations that lasted hours without either of us noticing the time pass.</p>
+    </div>
+    <div class="t-item reveal delay-1">
+      <div class="t-dot"></div>
+      <p class="t-date">February 2026</p>
+      <h3 class="t-title">We Became Official 💕</h3>
+      <p class="t-desc">The moment we both admitted what we already knew — this was something real. Something worth holding onto with both hands.</p>
+    </div>
+    <div class="t-item reveal delay-2">
+      <div class="t-dot"></div>
+      <p class="t-date">The First Meet, Mumbai</p>
+      <h3 class="t-title">You Stepped Into My World 🌹</h3>
+      <p class="t-desc">The nerves, the anticipation, and then finally — you, standing right there in front of me. Every feeling I had suddenly made perfect sense.</p>
+    </div>
+    <div class="t-item reveal">
+      <div class="t-dot"></div>
+      <p class="t-date">March 28, 2026</p>
+      <h3 class="t-title">Your Birthday 🎂</h3>
+      <p class="t-desc">Celebrating the most wonderful person I have ever met. Here's to you, to us, and to every chapter that is still yet to come. I can't wait.</p>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ══ LOVE NOTES JAR ══ -->
+<section class="jar-section">
+  <p class="s-label reveal">Open a note</p>
+  <h2 class="s-title reveal delay-1">Love <em>Notes Jar</em></h2>
+  <div class="jar-wrap">
+    <p class="jar-hint reveal">Tap the jar — each one is a little piece of my heart 🫙</p>
+    <div class="jar-svg-wrap reveal delay-1" id="jarEl" onclick="shakeJar()">
+      <svg width="120" height="180" viewBox="0 0 120 180" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="jarGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.06)"/>
+            <stop offset="50%" stop-color="rgba(255,255,255,0.14)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0.04)"/>
+          </linearGradient>
+        </defs>
+        <!-- Lid -->
+        <rect x="30" y="10" width="60" height="20" rx="4" fill="#C9963A" opacity="0.9"/>
+        <rect x="28" y="27" width="64" height="8" rx="2" fill="#B08020" opacity="0.8"/>
+        <!-- Jar body -->
+        <rect x="22" y="35" width="76" height="130" rx="14" fill="url(#jarGrad)" stroke="rgba(201,150,58,0.35)" stroke-width="1.5"/>
+        <!-- Notes inside -->
+        <rect x="38" y="60" width="22" height="28" rx="3" fill="#FDF8F0" opacity="0.9" transform="rotate(-8,49,74)"/>
+        <rect x="60" y="55" width="22" height="28" rx="3" fill="#FDEEF2" opacity="0.85" transform="rotate(6,71,69)"/>
+        <rect x="42" y="95" width="22" height="28" rx="3" fill="#FDF8F0" opacity="0.8" transform="rotate(3,53,109)"/>
+        <rect x="62" y="90" width="22" height="28" rx="3" fill="#F5EDE0" opacity="0.85" transform="rotate(-5,73,104)"/>
+        <!-- Shine -->
+        <rect x="30" y="42" width="6" height="60" rx="3" fill="rgba(255,255,255,0.12)"/>
+      </svg>
+    </div>
+    <div class="note-popup" id="notePopup">
+      <p class="note-num" id="noteNum">Note 1 of 10</p>
+      <p id="noteText">Tap to read...</p>
+      <p class="tap-next" onclick="shakeJar()">✦ Tap jar for another ✦</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MUSIC ══ -->
+<section>
+  <p class="s-label reveal">Our soundtrack</p>
+  <h2 class="s-title reveal delay-1"><em>Playing</em> Just For You</h2>
+  <div class="player-card reveal delay-2" id="playerCard">
+    <div class="player-disc" id="playerDisc">
+      <div class="disc-hole">🎵</div>
+    </div>
+    <div class="player-meta">
+      <p class="player-song">Bairan</p>
+      <p class="player-artist">Banjaare · Album</p>
+    </div>
+    <div style="width:100%">
+      <div class="player-track">
+        <div class="player-fill" id="playerFill"></div>
+      </div>
+      <div class="player-time">
+        <span id="timeCur">0:00</span>
+        <span id="timeTotal">3:30</span>
+      </div>
+    </div>
+    <div class="player-btns">
+      <button class="p-btn" onclick="prevSong()">⏮</button>
+      <button class="p-play" id="playBtn" onclick="togglePlay()">▶</button>
+      <button class="p-btn" onclick="nextSong()">⏭</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══ QUIZ ══ -->
+<section>
+  <p class="s-label reveal">A little game</p>
+  <h2 class="s-title reveal delay-1"><em>How Well</em> Does Heeral Know Vignesh?</h2>
+  <div class="quiz-wrap reveal delay-2">
+    <div class="quiz-progress" id="quizProg">
+      <div class="qp-dot"></div>
+      <div class="qp-dot"></div>
+      <div class="qp-dot"></div>
+      <div class="qp-dot"></div>
+      <div class="qp-dot"></div>
+    </div>
+    <div class="quiz-card" id="quizCard">
+      <p class="q-num" id="qNum">Question 1 of 5</p>
+      <p class="q-text" id="qText"></p>
+      <div class="q-options" id="qOpts"></div>
+    </div>
+    <div class="quiz-result" id="quizResult" style="display:none">
+      <p style="font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.3em;color:var(--gold)">YOUR SCORE</p>
+      <p class="result-score" id="rScore">0/5</p>
+      <p class="result-msg" id="rMsg"></p>
+      <button class="quiz-restart" onclick="restartQuiz()">🔄 Try Again</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FINAL WISH ══ -->
+<section class="wish-section">
+  <p class="s-label reveal">The most important words</p>
+  <p class="wish-big reveal delay-1">Happy<br><span class="accent">Birthday</span><br>Heeral 🌹</p>
+  <p class="wish-sub reveal delay-2">
+    May this year bring you every joy your heart deserves.<br>
+    May every dream you hold feel a little closer.<br>
+    And may you always know — you are deeply, completely, endlessly loved.
+  </p>
+  <button class="celebrate-btn reveal delay-3" onclick="launchCelebration()">🎉 Celebrate With Me!</button>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="heart-anim">❤️</div>
+  <p class="footer-text">Made in Bhiwandi · With every piece of my heart · Just for you</p>
+  <p class="footer-sign">Vignesh</p>
+</footer>
+
+</div><!-- /page -->
+
+<script>
+// ── PARTICLES
+const canvas = document.getElementById('bgCanvas');
+const ctx = canvas.getContext('2d');
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+resizeCanvas();
+window.addEventListener('resize',resizeCanvas);
+
+class Petal{
+  constructor(){this.reset(true)}
+  reset(init=false){
+    this.x=Math.random()*canvas.width;
+    this.y=init?Math.random()*canvas.height:-20;
+    this.size=Math.random()*3+1;
+    this.vx=(Math.random()-0.5)*0.5;
+    this.vy=Math.random()*0.6+0.2;
+    this.alpha=Math.random()*0.5+0.1;
+    this.color=Math.random()>0.55?'217,79,107':'201,150,58';
+    this.angle=Math.random()*Math.PI*2;
+    this.spin=(Math.random()-0.5)*0.05;
+  }
+  update(){
+    this.x+=this.vx+Math.sin(this.angle)*0.3;
+    this.y+=this.vy;
+    this.angle+=this.spin;
+    if(this.y>canvas.height+10)this.reset();
+  }
+  draw(){
+    ctx.save();
+    ctx.translate(this.x,this.y);
+    ctx.rotate(this.angle);
+    ctx.beginPath();
+    ctx.ellipse(0,0,this.size*2,this.size,0,0,Math.PI*2);
+    ctx.fillStyle=`rgba(${this.color},${this.alpha})`;
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+const petals=[];
+for(let i=0;i<70;i++)petals.push(new Petal());
+function animLoop(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  petals.forEach(p=>{p.update();p.draw()});
+  requestAnimationFrame(animLoop);
+}
+animLoop();
+
+// ── SCROLL REVEAL
+const reveals=document.querySelectorAll('.reveal');
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}});
+},{threshold:0.1});
+reveals.forEach(el=>io.observe(el));
+
+
+
+// ── LOVE NOTES JAR
+const notes=[
+  "You make every ordinary day feel extraordinary just by being in it. 🌹",
+  "I never knew what 'home' felt like until I found you, Heeral.",
+  "Your laugh is my favourite sound in the entire world. Don't ever stop laughing.",
+  "The way you care for people tells me everything I need to know about your beautiful soul.",
+  "Watching you eat Jalebi with that happy face is my personal paradise. 💛",
+  "You are not just my girlfriend — you are my favourite part of every single day.",
+  "I am convinced the universe saved me for you. Lucky me. Lucky, lucky me.",
+  "Your confidence is the most attractive thing I have ever seen. Walk like you own the room — because you do.",
+  "From Snapchat to right here — I'd choose you again in every version of every life.",
+  "Happy Birthday. This world is so much better because you were born into it, Heeral. 🌸"
+];
+let noteIdx=-1;
+function shakeJar(){
+  const jar=document.getElementById('jarEl');
+  jar.classList.remove('jar-shake');
+  void jar.offsetWidth;
+  jar.classList.add('jar-shake');
+  noteIdx=(noteIdx+1)%notes.length;
+  const popup=document.getElementById('notePopup');
+  popup.classList.remove('show');
+  setTimeout(()=>{
+    document.getElementById('noteText').textContent=notes[noteIdx];
+    document.getElementById('noteNum').textContent=`Note ${noteIdx+1} of ${notes.length}`;
+    popup.classList.add('show');
+  },200);
+  jar.addEventListener('animationend',()=>jar.classList.remove('jar-shake'),{once:true});
+}
+
+// ── MUSIC PLAYER (visual)
+const audio = new Audio('https://res.cloudinary.com/dzkvuk2ha/video/upload/v1773750867/Bairan_Banjaare_pagalall.com_qg3jgu.mp3');
+audio.preload = 'metadata';
+let isPlaying = false;
+
+function fmt(s){ s=Math.floor(s); return Math.floor(s/60)+':'+(s%60<10?'0':'')+s%60; }
+
+audio.addEventListener('loadedmetadata', ()=>{
+  document.getElementById('timeTotal').textContent = fmt(audio.duration);
+});
+
+audio.addEventListener('timeupdate', ()=>{
+  if(!audio.duration) return;
+  document.getElementById('playerFill').style.width = (audio.currentTime/audio.duration*100)+'%';
+  document.getElementById('timeCur').textContent = fmt(audio.currentTime);
+});
+
+audio.addEventListener('ended', ()=>{
+  isPlaying=false;
+  audio.currentTime=0;
+  document.getElementById('playBtn').textContent='▶';
+  document.getElementById('playerDisc').classList.remove('spinning');
+  document.getElementById('playerFill').style.width='0%';
+  document.getElementById('timeCur').textContent='0:00';
+});
+
+function togglePlay(){
+  if(isPlaying){ audio.pause(); isPlaying=false; }
+  else{ audio.play(); isPlaying=true; }
+  document.getElementById('playBtn').textContent=isPlaying?'⏸':'▶';
+  document.getElementById('playerDisc').classList.toggle('spinning',isPlaying);
+}
+
+function prevSong(){ audio.currentTime=0; }
+function nextSong(){ audio.currentTime=audio.duration; }
+
+// ── QUIZ
+const questions=[
+  {q:"What city does Vignesh call home?",opts:["Mumbai","Bhiwandi","Pune"],ans:1},
+  {q:"How did Vignesh and Heeral first connect?",opts:["Instagram","Snapchat","Through friends"],ans:1},
+  {q:"Which month did our love story officially begin?",opts:["January 2026","February 2026","March 2026"],ans:1},
+  {q:"What does Vignesh love watching Heeral eat the most?",opts:["Pizza","Jalebi & Dhokla","Biryani"],ans:1},
+  {q:"What is the one thing Heeral always knows how to do for Vignesh?",opts:["Cook for him","Make him laugh on his worst days","Cheer him on"],ans:1}
+];
+let qIdx=0,score=0,answered=false;
+function renderQ(){
+  const q=questions[qIdx];
+  document.getElementById('qNum').textContent=`Question ${qIdx+1} of ${questions.length}`;
+  document.getElementById('qText').textContent=q.q;
+  const optsEl=document.getElementById('qOpts');
+  optsEl.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const btn=document.createElement('button');
+    btn.className='q-opt';btn.textContent=o;
+    btn.onclick=()=>answerQ(i,btn);
+    optsEl.appendChild(btn);
+  });
+  answered=false;
+  const dots=document.querySelectorAll('.qp-dot');
+  dots.forEach((d,i)=>d.classList.toggle('done',i<qIdx));
+}
+function answerQ(i,btn){
+  if(answered)return;
+  answered=true;
+  const correct=questions[qIdx].ans;
+  btn.classList.add(i===correct?'correct':'wrong');
+  if(i===correct)score++;
+  const btns=document.querySelectorAll('.q-opt');
+  btns[correct].classList.add('correct');
+  setTimeout(()=>{
+    qIdx++;
+    if(qIdx<questions.length){renderQ()}
+    else{showResult()}
+  },1100);
+}
+function showResult(){
+  document.getElementById('quizCard').style.display='none';
+  document.getElementById('quizProg').style.display='none';
+  const res=document.getElementById('quizResult');
+  res.style.display='block';
+  document.getElementById('rScore').textContent=`${score}/5`;
+  const msgs=[
+    "We just started our story — you'll know everything soon, my love. 😄",
+    "Not bad for our first few months! I'll keep dropping hints. 💕",
+    "You know me pretty well! But the best chapters are still coming. 🌹",
+    "Almost perfect — you really do pay attention, don't you? That's why I love you.",
+    "5/5?! You know my soul, Heeral. You always have. You always will. 🌹✨"
+  ];
+  document.getElementById('rMsg').textContent=msgs[Math.min(score,4)];
+}
+function restartQuiz(){
+  qIdx=0;score=0;
+  document.getElementById('quizCard').style.display='block';
+  document.getElementById('quizProg').style.display='flex';
+  document.getElementById('quizResult').style.display='none';
+  renderQ();
+}
+renderQ();
+
+// ── CONFETTI
+function launchCelebration(){
+  const colors=['#D94F6B','#C9963A','#fff','#F07A92','#E8B860','#FDEEF2','#FFD700','#FFB6C1'];
+  const shapes=['circle','rect','pill'];
+  for(let i=0;i<120;i++){
+    setTimeout(()=>{
+      const el=document.createElement('div');
+      const size=Math.random()*9+5;
+      const shape=shapes[Math.floor(Math.random()*shapes.length)];
+      const br=shape==='circle'?'50%':shape==='pill'?'100px':'3px';
+      const w=shape==='pill'?size*2:size;
+      Object.assign(el.style,{
+        position:'fixed',left:Math.random()*100+'vw',top:'-20px',
+        width:w+'px',height:size+'px',
+        background:colors[Math.floor(Math.random()*colors.length)],
+        borderRadius:br,opacity:'1',zIndex:'9999',
+        transform:`rotate(${Math.random()*360}deg)`,
+        pointerEvents:'none',
+        transition:`top ${1.8+Math.random()*1.5}s cubic-bezier(0.25,0.46,0.45,0.94), opacity 0.5s ${1.8+Math.random()*1}s`
+      });
+      document.body.appendChild(el);
+      requestAnimationFrame(()=>{el.style.top=(75+Math.random()*30)+'vh';el.style.opacity='0'});
+      setTimeout(()=>el.remove(),4000);
+    },i*25);
+  }
+}
+</script>
+</body>
+</html>
